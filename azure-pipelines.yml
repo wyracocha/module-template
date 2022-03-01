@@ -20,6 +20,10 @@ variables:
   value: 'd32248ab-7cca-4946-9991-f94c7ba40ebd'
 - name: RSC_GROUP
   value: 'RG-SHARED-DEV-001-EU2-ARQSOP'
+- name: resource
+  value: $(RES)
+- name: resource_id
+  value: $(RES_ID)
 
 stages:
 - stage: PLAN_STAGE_${{ variables.ENVIRONMENT }}
@@ -58,6 +62,40 @@ stages:
         inputs:
           provider: 'azurerm'
           command: 'plan'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+          environmentServiceNameAzureRM: '${{ variables.SERVICE_ACCOUNT }}'
+
+- stage: FIX_STAGE_${{ variables.ENVIRONMENT }}
+  dependsOn: FIX_STAGE_${{ variables.ENVIRONMENT }}
+  displayName: FIX_STAGE_${{ variables.ENVIRONMENT }}
+  jobs:
+    - job: FIX_STAGE_${{ variables.ENVIRONMENT }}
+      timeoutInMinutes: 480
+      continueOnError: false
+      steps:
+      - checkout: self
+      - checkout: git://PLATAFORMA-DE-SOPORTE-CC/IAAC-MODULES-REPOSITORY@main-fase2
+      - task: TerraformInstaller@0
+        inputs:
+          terraformVersion: '0.14.10'
+      - task: TerraformTaskV1@0
+        displayName: IMPORT
+        inputs:
+          provider: 'azurerm'
+          command: 'import'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+          backendServiceArm: '${{ variables.SERVICE_ACCOUNT }}'
+          backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
+          backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
+          backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
+          backendAzureRmKey: 'terraform_test.tfstate'
+          resourceAddress: $(RES)
+          resourceId: $(RES_ID)
+      - task: TerraformTaskV1@0
+        displayName: APPLY
+        inputs:
+          provider: 'azurerm'
+          command: 'apply'
           workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
           environmentServiceNameAzureRM: '${{ variables.SERVICE_ACCOUNT }}'
 
