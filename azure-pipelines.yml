@@ -66,7 +66,6 @@ stages:
           environmentServiceNameAzureRM: '${{ variables.SERVICE_ACCOUNT }}'
 
 - stage: FIX_STAGE_${{ variables.ENVIRONMENT }}
-  dependsOn: FIX_STAGE_${{ variables.ENVIRONMENT }}
   displayName: FIX_STAGE_${{ variables.ENVIRONMENT }}
   jobs:
     - job: FIX_STAGE_${{ variables.ENVIRONMENT }}
@@ -91,13 +90,6 @@ stages:
           backendAzureRmKey: 'terraform_test.tfstate'
           resourceAddress: $(RES)
           resourceId: $(RES_ID)
-      - task: TerraformTaskV1@0
-        displayName: APPLY
-        inputs:
-          provider: 'azurerm'
-          command: 'apply'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
-          environmentServiceNameAzureRM: '${{ variables.SERVICE_ACCOUNT }}'
 
 - stage: APPLY_STAGE_${{ variables.ENVIRONMENT }}
   dependsOn: PLAN_STAGE_${{ variables.ENVIRONMENT }}
