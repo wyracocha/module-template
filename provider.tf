@@ -1,10 +1,11 @@
 
 terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "2.94.0"
-    }
+  backend "azurerm" {
+    resource_group_name   = "RG-SHAREDSVC-PROD-100-EU2-ARQSOP"
+    storage_account_name  = "stsharedsvcprod100eu2"
+    #el container varia dependiendo la capa
+    container_name        = "shared-services-dev"
+    key                   = "terraform.tfstate_tdev"
   }
 }
 
