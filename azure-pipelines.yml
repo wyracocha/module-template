@@ -80,7 +80,7 @@ stages:
       - task: TerraformTaskV1@0
         displayName: IMPORT
         inputs:
-          provider: 'azurerm'
+          #provider: 'azurerm'
           command: 'import'
           workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
           backendServiceArm: '${{ variables.SERVICE_ACCOUNT }}'
