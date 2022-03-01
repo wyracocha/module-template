@@ -46,7 +46,7 @@ stages:
           backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
           backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
           backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
-          backendAzureRmKey: 'terraform_base.tfstate'
+          backendAzureRmKey: 'terraform_test.tfstate'
       - task: TerraformTaskV1@0
         displayName: VALIDATE
         inputs:
@@ -87,7 +87,7 @@ stages:
           backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
           backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
           backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
-          backendAzureRmKey: 'terraform_base.tfstate'
+          backendAzureRmKey: 'terraform_test.tfstate'
       - task: TerraformTaskV1@0
         displayName: APPLY
         inputs:
@@ -136,7 +136,7 @@ stages:
           backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
           backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
           backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
-          backendAzureRmKey: 'terraform_base.tfstate'
+          backendAzureRmKey: 'terraform_test.tfstate'
       - task: TerraformTaskV1@0
         displayName: DESTROY
         inputs:
