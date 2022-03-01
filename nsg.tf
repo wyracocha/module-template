@@ -88,16 +88,16 @@ module "nsg_shared_06_eu2" {
   monitor_storage_id  = azurerm_storage_account.stsharedfuncprod003eu2.id
 }
 
-module "nsg_association_2_eu2" {
-  source = "../IAAC-MODULES-REPOSITORY/NSGAssociation"
-
-  snet_id = module.snet_shared_03_eu2.id
-  #snet_id   = module.snet_shared_04_eu2.id
-  nsg_id = module.nsg_shared_06_eu2.id
-
-  depends_on = [module.snet_shared_03_eu2, module.nsg_shared_06_eu2]
-  #depends_on = [module.snet_shared_04_eu2, module.nsg_shared_06_eu2]
-}
+#module "nsg_association_2_eu2" {
+#  source = "../IAAC-MODULES-REPOSITORY/NSGAssociation"
+#
+#  snet_id = module.snet_shared_03_eu2.id
+#  #snet_id   = module.snet_shared_04_eu2.id
+#  nsg_id = module.nsg_shared_06_eu2.id
+#
+#  depends_on = [module.snet_shared_03_eu2, module.nsg_shared_06_eu2]
+#  #depends_on = [module.snet_shared_04_eu2, module.nsg_shared_06_eu2]
+#}
 
 module "rg_shared_01_eu2" {
   source = "../IAAC-MODULES-REPOSITORY/ResourceGroup"
