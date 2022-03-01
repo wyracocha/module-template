@@ -5,7 +5,7 @@ terraform {
     storage_account_name  = "stsharedsvcprod100eu2"
     #el container varia dependiendo la capa
     container_name        = "shared-services-dev"
-    key                   = "terraform.tfstate_tdev"
+    key                   = "terraform-dev.tfstatedev"
   }
 }
 
