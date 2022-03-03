@@ -6,6 +6,6 @@ resource "random_string" "random" {
   special          = true
   override_special = "/@£$"
 }
-output {
+output ok {
   value = local.ok
 }

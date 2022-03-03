@@ -26,7 +26,7 @@ module "cr_dataint_eu2" {
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
-  correlativo         = "001"
+  correlativo         = "202"
   cod_location        = "eu2"
   resource_group_name = module.rg_dataint_eu2.name
   cod_proyecto_arqsop = "arqsop"

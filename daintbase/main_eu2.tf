@@ -6,7 +6,7 @@ module "rg_dataint_eu2" {
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
-  correlativo         = "001"
+  correlativo = "202"
   cod_location        = "eu2"
   cod_proyecto_arqsop = "arqsop"
 }
@@ -33,7 +33,7 @@ module "vnet_dataint_01_eu2" {
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
-  correlativo         = "001"
+  correlativo = "202"
   cod_location        = "eu2"
   resource_group_name = module.rg_dataint_eu2.name
   address_space       = ["10.169.40.0/21","10.169.48.0/23"]
@@ -71,7 +71,7 @@ module "snet_dataint_01_eu2" {
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
-  correlativo         = "001"
+  correlativo = "202"
   cod_location        = "eu2"
   resource_group_name = module.rg_dataint_eu2.name
   address_prefix      = ["10.169.40.0/21"]
@@ -161,7 +161,7 @@ module "adf_dataint_eu2" {
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
-  correlativo         = "007"
+  correlativo = "202"
   cod_location        = "eu2"
   resource_group_name = module.rg_dataint_eu2.name
   cod_proyecto_arqsop = "arqsop"
@@ -179,7 +179,7 @@ module "st_data_eu2" {
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
-  correlativo         = "008"
+  correlativo = "202"
   cod_location        = "eu2"
   resource_group_name = module.rg_dataint_eu2.name
   cod_proyecto_arqsop = "arqsop"

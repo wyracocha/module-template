@@ -6,7 +6,7 @@ module "rg_dataint_cu1" {
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
-  correlativo         = "001"
+  correlativo         = "202"
   cod_location        = "cu1"
   cod_proyecto_arqsop = "arqsop"
 }
@@ -20,7 +20,7 @@ module "vnet_dataint_cu1" {
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
-  correlativo         = "002"
+  correlativo         = "202"
   cod_location        = "cu1"
   resource_group_name = module.rg_dataint_cu1.name
   address_space       = ["172.20.16.0/22"]
@@ -33,7 +33,7 @@ module "vnet_dataint_01_cu1" {
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
-  correlativo         = "001"
+  correlativo         = "201"
   cod_location        = "cu1"
   resource_group_name = module.rg_dataint_cu1.name
   address_space       = ["10.170.40.0/21","10.170.48.0/23"]
@@ -71,7 +71,7 @@ module "snet_dataint_01_cu1" {
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
-  correlativo         = "001"
+  correlativo = "202"
   cod_location        = "cu1"
   resource_group_name = module.rg_dataint_cu1.name
   address_prefix      = ["10.170.40.0/21"]
@@ -139,7 +139,7 @@ module "kv_dataint_cu1" {
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prd"
-  correlativo         = "005"
+  correlativo         = "202"
   cod_location        = "cu1"
   resource_group_name = module.rg_dataint_cu1.name
   sku_name            = "standard"
@@ -161,7 +161,7 @@ module "adf_dataint_cu1" {
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
-  correlativo         = "007"
+  correlativo         = "202"
   cod_location        = "cu1"
   resource_group_name = module.rg_dataint_cu1.name
   cod_proyecto_arqsop = "arqsop"
@@ -179,7 +179,7 @@ module "st_data_cu1" {
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
-  correlativo         = "008"
+  correlativo         = "202"
   cod_location        = "cu1"
   resource_group_name = module.rg_dataint_cu1.name
   cod_proyecto_arqsop = "arqsop"
