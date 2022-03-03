@@ -57,6 +57,7 @@ stages:
           workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
       - task: Bash@3
         inputs:
+          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
           targetType: 'inline'
           script: 'terraform state list'
       - task: TerraformTaskV1@0
