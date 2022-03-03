@@ -7,23 +7,21 @@ pool:
 
 variables:
 - name: LAYER
-  value: 'shared-services'
+  value: 'data-integration'
 - name: ENVIRONMENT
-  value: 'dev'
+  value: 'prod'
 - name: STR_ACT
-  value: 'stsharedsvcdev100eu2'
+  value: 'stdataintprod100eu2'
 - name: RSC_GROUP_BACKEND
-  value: 'RG-SHAREDSVC-DEV-100-EU2-ARQSOP'
+  value: 'RG-DATAINT-PROD-100-EU2-ARQSOP'
 - name: SERVICE_ACCOUNT
-  value: 'sp-arqsop-sharedservices-dev-001-devops'
+  value: 'sp-arqsop-dataintegration-prod-001-devops'
 - name: SUBSCRIPTION_ID
-  value: 'd32248ab-7cca-4946-9991-f94c7ba40ebd'
+  value: 'f3a8e4e5-ca50-4147-a574-0c289f9fb6a0'
 - name: RSC_GROUP
-  value: 'RG-SHARED-DEV-001-EU2-ARQSOP'
-- name: resource
-  value: $(RES)
-- name: resource_id
-  value: $(RES_ID)
+  value: 'RG-DATAINT-PROD-001-EU2-ARQSOP'
+- name: RSC_GROUP_2
+  value: 'RG-DATAINT-PROD-001-CU1-ARQSOP'
 
 stages:
 - stage: PLAN_STAGE_${{ variables.ENVIRONMENT }}
@@ -50,19 +48,17 @@ stages:
           backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
           backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
           backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
-          backendAzureRmKey: 'terraform_test.tfstate'
+          backendAzureRmKey: 'terraform_base.tfstate'
       - task: TerraformTaskV1@0
         displayName: VALIDATE
         inputs:
           provider: 'azurerm'
           command: 'validate'
           workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
-      - task: TerraformTaskV1@0
-        displayName: list_state
+      - task: Bash@3
         inputs:
-          provider: 'azurerm'
-          command: 'satate list'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+          targetType: 'inline'
+          script: 'terraform state list'
       - task: TerraformTaskV1@0
         displayName: PLAN
         inputs:
@@ -71,32 +67,6 @@ stages:
           workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
           environmentServiceNameAzureRM: '${{ variables.SERVICE_ACCOUNT }}'
 
-- stage: FIX_STAGE_${{ variables.ENVIRONMENT }}
-  displayName: FIX_STAGE_${{ variables.ENVIRONMENT }}
-  jobs:
-    - job: FIX_STAGE_${{ variables.ENVIRONMENT }}
-      timeoutInMinutes: 480
-      continueOnError: false
-      steps:
-      - checkout: self
-      - checkout: git://PLATAFORMA-DE-SOPORTE-CC/IAAC-MODULES-REPOSITORY@main-fase2
-      - task: TerraformInstaller@0
-        inputs:
-          terraformVersion: '0.14.10'
-      - task: TerraformTaskV1@0
-        displayName: IMPORT
-        inputs:
-          #provider: 'azurerm'
-          command: 'import'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
-          backendServiceArm: '${{ variables.SERVICE_ACCOUNT }}'
-          backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
-          backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
-          backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
-          backendAzureRmKey: 'terraform_test.tfstate'
-          resourceAddress: $(RES)
-          resourceId: $(RES_ID)
-
 - stage: APPLY_STAGE_${{ variables.ENVIRONMENT }}
   dependsOn: PLAN_STAGE_${{ variables.ENVIRONMENT }}
   displayName: APPLY_STAGE_${{ variables.ENVIRONMENT }}
@@ -104,12 +74,15 @@ stages:
     - deployment: APROBACION_APPLY_${{ variables.ENVIRONMENT }}
       environment: TF-ACTIONS
     - job: APPLY_STAGE_${{ variables.ENVIRONMENT }}
-      timeoutInMinutes: 480
       continueOnError: false
       dependsOn: APROBACION_APPLY_${{ variables.ENVIRONMENT }}
       steps:
       - checkout: self
       - checkout: git://PLATAFORMA-DE-SOPORTE-CC/IAAC-MODULES-REPOSITORY@main-fase2
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: 'wget -q https://packages.microsoft.com/config/ubuntu/18.10/packages-microsoft-prod.deb && sudo dpkg -i packages-microsoft-prod.deb'
       - task: TerraformInstaller@0
         inputs:
           terraformVersion: '0.14.10'
@@ -123,7 +96,7 @@ stages:
           backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
           backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
           backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
-          backendAzureRmKey: 'terraform_test.tfstate'
+          backendAzureRmKey: 'terraform_base.tfstate'
       - task: TerraformTaskV1@0
         displayName: APPLY
         inputs:
@@ -149,37 +122,44 @@ stages:
 #          SubscriptionId: '${{ variables.SUBSCRIPTION_ID }}'
 #          EnableOMSLogging: false
 #          AggregateControlsStatus: false
+#      - task: AzSKSVTs@4
+#        inputs:
+#          ConnectedServiceNameARM: '${{ variables.SERVICE_ACCOUNT }}'
+#          GenerateMethodParameterSetSelection: 'ResourceGroupName'
+#          ResourceGroupName: '${{ variables.RSC_GROUP_2 }}'
+#          SubscriptionId: '${{ variables.SUBSCRIPTION_ID }}'
+#          EnableOMSLogging: false
+#          AggregateControlsStatus: false
 
-- stage: DESTROY_STAGE_${{ variables.ENVIRONMENT }}
-#  dependsOn: SECURITY_VERIFICATION_STAGE_${{ variables.ENVIRONMENT }}
-  displayName: DESTROY_STAGE_${{ variables.ENVIRONMENT }}
-  jobs:
-    - deployment: APROBACION_DESTROY_${{ variables.ENVIRONMENT }}
-      environment: TF-ACTIONS
-    - job: DESTROY_STAGE_${{ variables.ENVIRONMENT }}
-      continueOnError: false
-      dependsOn: APROBACION_DESTROY_${{ variables.ENVIRONMENT }}
-      steps:
-      - checkout: self
-      - checkout: git://PLATAFORMA-DE-SOPORTE-CC/IAAC-MODULES-REPOSITORY@main-fase2
-      - task: TerraformInstaller@0
-        inputs:
-          terraformVersion: '0.14.10'
-      - task: TerraformTaskV1@0
-        displayName: INIT
-        inputs:
-          provider: 'azurerm'
-          command: 'init'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
-          backendServiceArm: '${{ variables.SERVICE_ACCOUNT }}'
-          backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
-          backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
-          backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
-          backendAzureRmKey: 'terraform_test.tfstate'
-      - task: TerraformTaskV1@0
-        displayName: DESTROY
-        inputs:
-          provider: 'azurerm'
-          command: 'destroy'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
-          environmentServiceNameAzureRM: '${{ variables.SERVICE_ACCOUNT }}'
+#- stage: DESTROY_STAGE_${{ variables.ENVIRONMENT }}
+#  displayName: DESTROY_STAGE_${{ variables.ENVIRONMENT }}
+#  jobs:
+#    - deployment: APROBACION_DESTROY_${{ variables.ENVIRONMENT }}
+#      environment: TF-ACTIONS
+#    - job: DESTROY_STAGE_${{ variables.ENVIRONMENT }}
+#      continueOnError: false
+#      dependsOn: APROBACION_DESTROY_${{ variables.ENVIRONMENT }}
+#      steps:
+#      - checkout: self
+#      - checkout: git://PLATAFORMA-DE-SOPORTE-CC/IAAC-MODULES-REPOSITORY@main-fase2
+#      - task: TerraformInstaller@0
+#        inputs:
+#          terraformVersion: '0.14.10'
+#      - task: TerraformTaskV1@0
+#        displayName: INIT
+#        inputs:
+#          provider: 'azurerm'
+#          command: 'init'
+#          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+#          backendServiceArm: '${{ variables.SERVICE_ACCOUNT }}'
+#          backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
+#          backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
+#          backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
+#          backendAzureRmKey: 'terraform_base.tfstate'
+#      - task: TerraformTaskV1@0
+#        displayName: DESTROY
+#        inputs:
+#          provider: 'azurerm'
+#          command: 'destroy'
+#          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+#          environmentServiceNameAzureRM: '${{ variables.SERVICE_ACCOUNT }}'
