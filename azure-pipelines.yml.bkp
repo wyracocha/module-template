@@ -7,21 +7,21 @@ pool:
 
 variables:
 - name: LAYER
-  value: 'shared-services'
+  value: 'data-integration'
 - name: ENVIRONMENT
-  value: 'dev'
+  value: 'prod'
 - name: STR_ACT
   value: 'stdataintprod100eu2'
 - name: RSC_GROUP_BACKEND
   value: 'RG-DATAINT-PROD-100-EU2-ARQSOP'
 - name: SERVICE_ACCOUNT
-  value: 'sp-arqsop-sharedservices-dev-001-devops'
+  value: 'sp-arqsop-dataintegration-prod-001-devops'
 - name: SUBSCRIPTION_ID
-  value: 'd32248ab-7cca-4946-9991-f94c7ba40ebd'
+  value: 'f3a8e4e5-ca50-4147-a574-0c289f9fb6a0'
 - name: RSC_GROUP
-  value: 'RG-SHARED-DEV-001-EU2-ARQSOP'
+  value: 'RG-DATAINT-PROD-001-EU2-ARQSOP'
 - name: RSC_GROUP_2
-  value: 'RG-DATAINT-DEV-001-CU1-ARQSOP'
+  value: 'RG-DATAINT-PROD-001-CU1-ARQSOP'
 
 stages:
 - stage: PLAN_STAGE_${{ variables.ENVIRONMENT }}
@@ -48,7 +48,7 @@ stages:
           backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
           backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
           backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
-          backendAzureRmKey: 'terraform_test.tfstate'
+          backendAzureRmKey: 'terraform_base.tfstate'
       - task: TerraformTaskV1@0
         displayName: VALIDATE
         inputs:
@@ -97,7 +97,7 @@ stages:
           backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
           backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
           backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
-          backendAzureRmKey: 'terraform_test.tfstate'
+          backendAzureRmKey: 'terraform_base.tfstate'
       - task: TerraformTaskV1@0
         displayName: APPLY
         inputs:
@@ -156,7 +156,7 @@ stages:
 #          backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
 #          backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
 #          backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
-#          backendAzureRmKey: 'terraform_test.tfstate'
+#          backendAzureRmKey: 'terraform_base.tfstate'
 #      - task: TerraformTaskV1@0
 #        displayName: DESTROY
 #        inputs:

@@ -10,7 +10,14 @@
 #}
 
 # Configure the Azure provider
+#provider "azurerm" {
+#  version = "~>2.0"
+#  features {}
+#}
 provider "azurerm" {
   version = "~>2.0"
   features {}
+
+  ##TODO DELETE THIS
+  subscription_id = "d32248ab-7cca-4946-9991-f94c7ba40ebd"
 }

@@ -24,7 +24,7 @@ resource "azurerm_network_profile" "netpro_cu1" {
 ########## CONTAINER REGISTRY - NO ELIMINAR - CONTIENE IMAGEN DE SFTP
 ######################################################################
 module "cr_dataint_cu1" {
-  source = "../IAAC-MODULES-REPOSITORY/ContainerRegistry/Cu1"
+  source = "../../IAAC-MODULES-REPOSITORY/ContainerRegistry/Cu1"
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
@@ -227,7 +227,7 @@ resource "azurerm_storage_share" "fs_sap_etl_pan_cu1" {
 }
 */
 ######################################################################
-########## DIRECTORIES IN FILE SHARES 
+########## DIRECTORIES IN FILE SHARES
 ######################################################################
 ##fs-ext-oracle-erp-global-001
 resource "azurerm_storage_share_directory" "output_oracle_cu1" {

@@ -2,7 +2,7 @@
 ########## RESOURCE GROUPS
 ######################################################################
 module "rg_dataint_cu1" {
-  source = "../IAAC-MODULES-REPOSITORY/ResourceGroup"
+  source = "../../IAAC-MODULES-REPOSITORY/ResourceGroup"
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
@@ -16,7 +16,7 @@ module "rg_dataint_cu1" {
 ######################################################################
 /*
 module "vnet_dataint_cu1" {
-  source = "../IAAC-MODULES-REPOSITORY/VirtualNetwork"
+  source = "../../IAAC-MODULES-REPOSITORY/VirtualNetwork"
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
@@ -29,7 +29,7 @@ module "vnet_dataint_cu1" {
 */
 
 module "vnet_dataint_01_cu1" {
-  source = "../IAAC-MODULES-REPOSITORY/VirtualNetwork"
+  source = "../../IAAC-MODULES-REPOSITORY/VirtualNetwork"
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
@@ -45,7 +45,7 @@ module "vnet_dataint_01_cu1" {
 ######################################################################
 /*
 module "snet_dataint_cu1" {
-  source = "../IAAC-MODULES-REPOSITORY/Subnet"
+  source = "../../IAAC-MODULES-REPOSITORY/Subnet"
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
@@ -67,7 +67,7 @@ module "snet_dataint_cu1" {
 */
 
 module "snet_dataint_01_cu1" {
-  source = "../IAAC-MODULES-REPOSITORY/Subnet"
+  source = "../../IAAC-MODULES-REPOSITORY/Subnet"
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
@@ -92,7 +92,7 @@ module "snet_dataint_01_cu1" {
 ######################################################################
 /*
 module "nsg_dataint_cu1" {
-  source = "../IAAC-MODULES-REPOSITORY/NetworkSecurityGroup/Cu1"
+  source = "../../IAAC-MODULES-REPOSITORY/NetworkSecurityGroup/Cu1"
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
@@ -135,7 +135,7 @@ module "nsg_dataint_cu1" {
 ########## KEY VAULT
 ######################################################################
 module "kv_dataint_cu1" {
-  source = "../IAAC-MODULES-REPOSITORY/KeyVault/Cu1"
+  source = "../../IAAC-MODULES-REPOSITORY/KeyVault/Cu1"
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prd"
@@ -157,7 +157,7 @@ module "kv_dataint_cu1" {
 ########## DATA FACTORY
 ######################################################################
 module "adf_dataint_cu1" {
-  source              = "../IAAC-MODULES-REPOSITORY/DataFactory/Cu1"
+  source              = "../../IAAC-MODULES-REPOSITORY/DataFactory/Cu1"
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
@@ -175,7 +175,7 @@ module "adf_dataint_cu1" {
 ########## STORAGE ACCOUNT
 ######################################################################
 module "st_data_cu1" {
-  source              = "../IAAC-MODULES-REPOSITORY/StorageAccount/Cu1"
+  source              = "../../IAAC-MODULES-REPOSITORY/StorageAccount/Cu1"
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
@@ -196,7 +196,7 @@ module "st_data_cu1" {
 ########## LOG ANALYTICS WORKSPACE
 ######################################################################
 module "log_data_cu1" {
-  source = "../IAAC-MODULES-REPOSITORY/LogAnalyticsWorkspace"
+  source = "../../IAAC-MODULES-REPOSITORY/LogAnalyticsWorkspace"
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
@@ -211,7 +211,7 @@ module "log_data_cu1" {
 ########## SQL SERVER
 ######################################################################
 module "sql_dataint_cu1" {
-  source              = "../IAAC-MODULES-REPOSITORY/SQLServer"
+  source              = "../../IAAC-MODULES-REPOSITORY/SQLServer"
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
@@ -227,7 +227,7 @@ module "sql_dataint_cu1" {
 ######################################################################
 /*
 module "nsg_association_cu1" {
-  source = "../IAAC-MODULES-REPOSITORY/NSGAssociation"
+  source = "../../IAAC-MODULES-REPOSITORY/NSGAssociation"
 
   snet_id   = module.snet_dataint_01_cu1.id
   #snet_id   = module.snet_dataint_cu1.id
@@ -279,7 +279,7 @@ resource "azurerm_storage_account" "fnapcu1prodstorage" {
 }
 
 module "database_failover_function_app_cu1" {
-  source = "../IAAC-MODULES-REPOSITORY/FunctionApp"
+  source = "../../IAAC-MODULES-REPOSITORY/FunctionApp"
 
   cod_proyecto               = "dataint"
   cod_ambiente               = "prod"
