@@ -66,7 +66,7 @@ stages:
         inputs:
           workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
           targetType: 'inline'
-          script: 'FILE=terraform_test.tfstate; if [ -f "$FILE" ]; then; terraform state list ; fi '
+          script: 'FILE=terraform_test.tfstate; if [ -f "$FILE" ] ; then terraform state list ; fi'
 
 - stage: APPLY_STAGE_${{ variables.ENVIRONMENT }}
   dependsOn: PLAN_STAGE_${{ variables.ENVIRONMENT }}
