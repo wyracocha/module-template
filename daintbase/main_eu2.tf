@@ -139,7 +139,7 @@ module "kv_dataint_eu2" {
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "prd"
-  correlativo         = "005"
+  correlativo         = "202"
   cod_location        = "eu2"
   resource_group_name = module.rg_dataint_eu2.name
   sku_name            = "standard"
