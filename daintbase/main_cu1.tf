@@ -216,7 +216,7 @@ module "sql_dataint_cu1" {
   cod_proyecto        = "dataint"
   cod_ambiente        = "prod"
   cod_location        = "cu1"
-  correlativo         = "001"
+  correlativo         = "202"
   cod_proyecto_arqsop = "arqsop"
   resource_group_name = module.rg_dataint_cu1.name
   sql_version         = "12.0"
