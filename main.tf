@@ -13,7 +13,7 @@ resource "random_password" "password" {
 }
 
 module "rg_dataint_cu1" {
-  source = "../../IAAC-MODULES-REPOSITORY/ResourceGroup"
+  source = "../IAAC-MODULES-REPOSITORY/ResourceGroup"
 
   cod_proyecto        = "dataint"
   cod_ambiente        = "dev"
