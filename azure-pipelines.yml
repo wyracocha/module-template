@@ -55,11 +55,6 @@ stages:
           provider: 'azurerm'
           command: 'validate'
           workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
-      - task: Bash@3
-        inputs:
-          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
-          targetType: 'inline'
-          script: 'terraform state list'
       - task: TerraformTaskV1@0
         displayName: PLAN
         inputs:
@@ -67,6 +62,11 @@ stages:
           command: 'plan'
           workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
           environmentServiceNameAzureRM: '${{ variables.SERVICE_ACCOUNT }}'
+      - task: Bash@3
+        inputs:
+          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+          targetType: 'inline'
+          script: 'ls; terraform state list'
 
 - stage: APPLY_STAGE_${{ variables.ENVIRONMENT }}
   dependsOn: PLAN_STAGE_${{ variables.ENVIRONMENT }}
