@@ -58,6 +58,12 @@ stages:
           command: 'validate'
           workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
       - task: TerraformTaskV1@0
+        displayName: list_state
+        inputs:
+          provider: 'azurerm'
+          command: 'satate list'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+      - task: TerraformTaskV1@0
         displayName: PLAN
         inputs:
           provider: 'azurerm'
