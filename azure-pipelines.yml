@@ -13,7 +13,7 @@ variables:
 - name: STR_ACT
   value: 'stdataintprod100eu2'
 - name: RSC_GROUP_BACKEND
-  value: 'RG-DATAINT-PROD-100-EU2-ARQSOP'
+  value: 'RG-SHARED-DEV-001-EU2-ARQSOP'
 - name: SERVICE_ACCOUNT
   value: 'sp-arqsop-sharedservices-dev-001-devops'
 - name: SUBSCRIPTION_ID
