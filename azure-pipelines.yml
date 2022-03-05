@@ -72,7 +72,7 @@ stages:
             backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
             backendAzureRmKey: 'terraform_base.tfstate'
             backendAzureRmSubscriptionId: '${{ variables.SUBSCRIPTION_ID }}'
-            script: 'ls;FILE=terraform_test.tfstate; if [ -f "$FILE" ]; then; terraform state list ; fi'
+            script: 'FILE=terraform_test.tfstate; if [ -f "$FILE" ]; then terraform state list ; fi'
 
 
 - stage: APPLY_STAGE_${{ variables.ENVIRONMENT }}
