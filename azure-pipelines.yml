@@ -66,7 +66,8 @@ stages:
         inputs:
             workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
             targetType: 'inline'
-            script: 'FILE=terraform_test.tfstate; if [ -f "$FILE" ]; then terraform state list ; fi; ls'
+            #terraform state pull
+            script: 'terraform state pull;FILE=terraform_test.tfstate; if [ -f "$FILE" ]; then terraform state list ; fi; ls'
      #- task: TerraformCLI@0
      #  displayName: 'terraform state list'
      #  inputs:
