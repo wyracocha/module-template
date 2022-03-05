@@ -36,17 +36,18 @@ stages:
       - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
         inputs:
           terraformVersion: '0.14.10'
-      - task: TerraformTaskV1@0
+      - task: TerraformCLI@0
         displayName: INIT
         inputs:
-          provider: 'azurerm'
-          command: 'init'
+          backendType: azurerm
+          command: init
           workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
           backendServiceArm: '${{ variables.SERVICE_ACCOUNT }}'
           backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
           backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
           backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
-          backendAzureRmKey: 'terraform_base.tfstate'
+          backendAzureRmKey: 'terraform_peerings.tfstate'
+          backendAzureRmSubscriptionId: '${{ variables.SUBSCRIPTION_ID }}'
       - task: TerraformTaskV1@0
         displayName: VALIDATE
         inputs:
