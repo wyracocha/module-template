@@ -64,8 +64,13 @@ stages:
         displayName: 'terraform state list'
         inputs:
           command: state
-          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
           stateSubCommand: list
+          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+          backendServiceArm: '${{ variables.SERVICE_ACCOUNT }}'
+          backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
+          backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
+          backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
+          backendAzureRmKey: 'terraform_base.tfstate'
 
 
 - stage: APPLY_STAGE_${{ variables.ENVIRONMENT }}
