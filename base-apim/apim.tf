@@ -66,3 +66,5 @@ module "apim_shared_06_eu2" {
 
 #az rest --method delete --url https://management.azure.com/subscriptions/d32248ab-7cca-4946-9991-f94c7ba40ebd/providers/Microsoft.ApiManagement/locations/eastus2/deletedservices/apim-sharedt-dev-509-eu2-arqsopt\?api-version\=2020-06-01-preview
 #az rest --method GET --url https://management.azure.com/subscriptions/d32248ab-7cca-4946-9991-f94c7ba40ebd/providers/Microsoft.ApiManagement/deletedservices\?api-version\=2020-06-01-preview
+#az rest --method delete --url https://management.azure.com/subscriptions/d32248ab-7cca-4946-9991-f94c7ba40ebd/providers/Microsoft.ApiManagement/locations/eastus2/deletedservices/apim-sharedt-dev-509-eu2-arqsopt\?api-version\=2020-06-01-preview
+#az rest --method delete --url https://management.azure.com//subscriptions/5301329a-5e13-4015-9bc9-6ed1053b0882/providers/Microsoft.ApiManagement/locations/eastus2/deletedservices/apim-shared-prod-006-eu2-arqsop\?api-version\=2020-06-01-preview

@@ -21,6 +21,6 @@ module "rg_dataint_cu1" {
   cod_location        = "cu1"
   cod_proyecto_arqsop = "arqsop"
 }
-output ok {
+output "ok" {
   value = local.ok
 }
