@@ -60,7 +60,9 @@ stages:
           command: 'plan'
           workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
           environmentServiceNameAzureRM: '${{ variables.SERVICE_ACCOUNT }}'
-      - task: TerraformCLI@0
+          #- task: TerraformCLI@0
+      - task: Bash@0
+        displayName: state
         inputs:
             workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
             backendServiceArm: '${{ variables.SERVICE_ACCOUNT }}'
