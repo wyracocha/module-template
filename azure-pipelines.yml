@@ -140,6 +140,61 @@ stages:
       steps:
       - checkout: self
       - checkout: git://PLATAFORMA-DE-SOPORTE-CC/IAAC-MODULES-REPOSITORY@main-fase2
+      - task: TerraformCLI@0
+        displayName: INIT
+        inputs:
+          backendType: azurerm
+          command: init
+          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+          backendServiceArm: '${{ variables.SERVICE_ACCOUNT }}'
+          backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
+          backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
+          backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
+          backendAzureRmKey: 'terraform_base.tfstate'
+          backendAzureRmSubscriptionId: '${{ variables.SUBSCRIPTION_ID }}'
+      - task: TerraformTaskV1@0
+        displayName: VALIDATE
+        inputs:
+          provider: 'azurerm'
+          command: 'validate'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+      - task: TerraformTaskV1@0
+        displayName: PLAN
+        inputs:
+          provider: 'azurerm'
+          command: 'plan'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+          environmentServiceNameAzureRM: '${{ variables.SERVICE_ACCOUNT }}'
+      - task: Bash@3
+        displayName: state2
+        inputs:
+            workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+            targetType: 'inline'
+            script: 'FILE=terraform_test.tfstate; if [ -f "$FILE" ]; then terraform state list ; fi; ls'
+      - task: TerraformCLI@0
+        displayName: 'terraform state list'
+        inputs:
+          command: state
+          stateSubCommand: list
+          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+
+
+- stage: APPLY_STAGE_${{ variables.ENVIRONMENT }}
+  dependsOn: PLAN_STAGE_${{ variables.ENVIRONMENT }}
+  displayName: APPLY_STAGE_${{ variables.ENVIRONMENT }}
+  jobs:
+    - deployment: APROBACION_APPLY_${{ variables.ENVIRONMENT }}
+      environment: TF-ACTIONS
+    - job: APPLY_STAGE_${{ variables.ENVIRONMENT }}
+      timeoutInMinutes: 480
+      continueOnError: false
+      dependsOn: APROBACION_APPLY_${{ variables.ENVIRONMENT }}
+      steps:
+      - checkout: self
+      - checkout: git://PLATAFORMA-DE-SOPORTE-CC/IAAC-MODULES-REPOSITORY@main-fase2
+      - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
+        inputs:
+          terraformVersion: '0.14.10'
       - task: TerraformTaskV1@0
         displayName: INIT
         inputs:
@@ -151,6 +206,62 @@ stages:
           backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
           backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
           backendAzureRmKey: 'terraform_base.tfstate'
+      - task: TerraformTaskV1@0
+        displayName: APPLY
+        inputs:
+          provider: 'azurerm'
+          command: 'apply'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+          environmentServiceNameAzureRM: '${{ variables.SERVICE_ACCOUNT }}'
+
+#- stage: SECURITY_VERIFICATION_STAGE_${{ variables.ENVIRONMENT }}
+#  dependsOn: APPLY_STAGE_${{ variables.ENVIRONMENT }}
+#  displayName: SECURITY_STAGE_${{ variables.ENVIRONMENT }}
+#  pool:
+#    vmImage: 'windows-2019'
+#  jobs:
+#    - job: SECURITY_VERIFICATION_STAGE_${{ variables.ENVIRONMENT }}
+#      continueOnError: true
+#      steps:
+#      - task: AzSKSVTs@4
+#        inputs:
+#          ConnectedServiceNameARM: '${{ variables.SERVICE_ACCOUNT }}'
+#          GenerateMethodParameterSetSelection: 'ResourceGroupName'
+#          ResourceGroupName: '${{ variables.RSC_GROUP }}'
+#          SubscriptionId: '${{ variables.SUBSCRIPTION_ID }}'
+#          EnableOMSLogging: false
+#          AggregateControlsStatus: false
+
+- stage: DESTROY_STAGE_${{ variables.ENVIRONMENT }}
+#  dependsOn: SECURITY_VERIFICATION_STAGE_${{ variables.ENVIRONMENT }}
+  displayName: DESTROY_STAGE_${{ variables.ENVIRONMENT }}
+  jobs:
+    - deployment: APROBACION_DESTROY_${{ variables.ENVIRONMENT }}
+      environment: TF-ACTIONS
+    - job: DESTROY_STAGE_${{ variables.ENVIRONMENT }}
+      continueOnError: false
+      dependsOn: APROBACION_DESTROY_${{ variables.ENVIRONMENT }}
+      steps:
+      - checkout: self
+      - checkout: git://PLATAFORMA-DE-SOPORTE-CC/IAAC-MODULES-REPOSITORY@main-fase2
+      - task: TerraformTaskV1@0
+        displayName: INIT
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+          backendServiceArm: '${{ variables.SERVICE_ACCOUNT }}'
+          backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
+          backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
+          backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
+          backendAzureRmKey: 'terraform_base.tfstate'
+      - task: TerraformTaskV1@0
+        displayName: DESTROY
+        inputs:
+          provider: 'azurerm'
+          command: 'destroy'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+          environmentServiceNameAzureRM: '${{ variables.SERVICE_ACCOUNT }}'
       - task: TerraformTaskV1@0
         displayName: DESTROY
         inputs:
