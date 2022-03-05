@@ -60,17 +60,23 @@ stages:
           command: 'plan'
           workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
           environmentServiceNameAzureRM: '${{ variables.SERVICE_ACCOUNT }}'
-      - task: TerraformCLI@0
-        displayName: 'terraform state list'
-        inputs:
-          command: state
-          stateSubCommand: list
-          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
-          backendServiceArm: '${{ variables.SERVICE_ACCOUNT }}'
-          backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
-          backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
-          backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
-          backendAzureRmKey: 'terraform_base.tfstate'
+          #- task: TerraformCLI@0
+          #  displayName: 'terraform state list'
+          #  inputs:
+          #    command: state
+          #    stateSubCommand: list
+          #    workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+          #    backendServiceArm: '${{ variables.SERVICE_ACCOUNT }}'
+          #    backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
+          #    backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
+          #    backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
+          #    backendAzureRmKey: 'terraform_base.tfstate'
+      - task: Bash@3
+        displayName: state2
+         inputs:
+            workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
+            targetType: 'inline'
+            script: 'FILE=terraform_test.tfstate; if [ -f "$FILE" ]; then terraform state list ; fi; ls'
 
 
 - stage: APPLY_STAGE_${{ variables.ENVIRONMENT }}
