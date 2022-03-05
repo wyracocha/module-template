@@ -66,11 +66,6 @@ stages:
           command: state
           stateSubCommand: list
           workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
-          backendServiceArm: '${{ variables.SERVICE_ACCOUNT }}'
-          backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
-          backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
-          backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
-          backendAzureRmKey: 'terraform_base.tfstate'
       - task: Bash@3
         displayName: state2
         inputs:
