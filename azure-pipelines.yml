@@ -46,7 +46,7 @@ stages:
           backendAzureRmResourceGroupName: '${{ variables.RSC_GROUP_BACKEND }}'
           backendAzureRmStorageAccountName: '${{ variables.STR_ACT }}'
           backendAzureRmContainerName: '${{ variables.LAYER }}-${{ variables.ENVIRONMENT }}'
-          backendAzureRmKey: 'terraform_peerings.tfstate'
+          backendAzureRmKey: 'terraform_base.tfstate'
           backendAzureRmSubscriptionId: '${{ variables.SUBSCRIPTION_ID }}'
       - task: TerraformTaskV1@0
         displayName: VALIDATE
@@ -61,18 +61,18 @@ stages:
           command: 'plan'
           workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
           environmentServiceNameAzureRM: '${{ variables.SERVICE_ACCOUNT }}'
-      - task: TerraformCLI@0
-        displayName: 'terraform state list'
-        inputs:
-          command: state
-          stateSubCommand: list
-          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
       - task: Bash@3
         displayName: state2
         inputs:
             workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
             targetType: 'inline'
             script: 'FILE=terraform_test.tfstate; if [ -f "$FILE" ]; then terraform state list ; fi; ls'
+      - task: TerraformCLI@0
+        displayName: 'terraform state list'
+        inputs:
+          command: state
+          stateSubCommand: list
+          workingDirectory: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/'
 
 
 - stage: APPLY_STAGE_${{ variables.ENVIRONMENT }}
