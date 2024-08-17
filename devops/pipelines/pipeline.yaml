@@ -27,11 +27,20 @@ stages:
     steps:
     - checkout: self
       clean: "true"
-    - script: |
-        docker run --tty --rm -v "$PWD:/app" -w /app bridgecrew/checkov --directory /app
+    - script: docker run --tty --rm -v "$PWD/infra:/app" -w /app bridgecrew/checkov --directory /app
+      displayName: Checkov
 - stage: Validation
   jobs:
-  - job: b
+  - job: Lint
+    steps: 
+    - checkout: self
+      clean: "true"
+    - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform init
+      displayName: Terraform init
+    - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform validate
+      displayName: Terraform validate
+    - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform fmt -recursive
+      displayName: Terraform fmt
 - stage: Terraform
   jobs:
   - job: init
