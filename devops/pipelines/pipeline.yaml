@@ -25,11 +25,11 @@ stages:
 - stage: Security
   jobs:
   - job: security configuration
-  steps:
-  - checkout: self
-    clean: "true"
-  - script: |
-      docker run --tty --rm -v "$PWD:/app" -w /app bridgecrew/checkov --directory /app
+    steps:
+    - checkout: self
+      clean: "true"
+    - script: |
+        docker run --tty --rm -v "$PWD:/app" -w /app bridgecrew/checkov --directory /app
 - stage: Validation
   jobs:
   - job: b
