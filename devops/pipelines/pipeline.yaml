@@ -1,0 +1,40 @@
+name: "$(Rev:rr)"
+
+# Trigger only on master/main branch and pull requests to master/main
+trigger:
+  branches:
+    include:
+      - master
+      - main
+
+pr:
+  branches:
+    include:
+      - master
+      - main
+
+pool:
+  vmImage: "ubuntu-22.04"
+
+variables:
+  - group: terraform-sample-global
+  - template: ../variables/variables.yaml
+
+stages:
+- stage: Security
+  jobs:
+  - job: security configuration
+  steps:
+  - checkout: self
+    clean: "true"
+  - script: |
+      docker run --tty --rm -v "$PWD:/app" -w /app bridgecrew/checkov --directory /app
+- stage: Validation
+  jobs:
+  - job: b
+- stage: Terraform Configuration
+  jobs:
+  - job: init
+  - job: plan
+  - job: apply
+
