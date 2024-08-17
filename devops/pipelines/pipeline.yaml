@@ -41,6 +41,8 @@ stages:
       displayName: Terraform validate
     - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform fmt -recursive
       displayName: Terraform fmt
+    - publish: $(System.DefaultWorkingDirectory)/infra
+      artifact: infra-${{ Build.BuildNumber }}
 - stage: Terraform
   jobs:
   - job: init
