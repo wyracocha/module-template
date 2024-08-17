@@ -41,11 +41,17 @@ stages:
       displayName: Terraform validate
     - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform fmt -recursive
       displayName: Terraform fmt
-    - publish: $(System.DefaultWorkingDirectory)/infra
-      artifact: infra-$(Build.BuildNumber)
-- stage: Terraform
-  jobs:
-  - job: init
-  - job: plan
-  - job: apply
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: $(System.DefaultWorkingDirectory)/infra
+        artifact: infra-$(Build.BuildNumber)
+        publishLocation: pipeline
 
+- stage: Plan
+  jobs:
+  - job: plan
+    - steps:
+      download: current
+      artifact: infra-$(Build.BuildNumber)
+    - script: docker run --rm -v "$PWD/infra-$(Build.BuildNumber):/app" -w /app  hashicorp/terraform plan
+      displayName: Terraform plan
