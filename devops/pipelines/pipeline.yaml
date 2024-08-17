@@ -23,7 +23,7 @@ variables:
 stages:
 - stage: Security
   jobs:
-  - job: security configuration
+  - job: configuration
     steps:
     - checkout: self
       clean: "true"
@@ -32,7 +32,7 @@ stages:
 - stage: Validation
   jobs:
   - job: b
-- stage: Terraform Configuration
+- stage: Terraform
   jobs:
   - job: init
   - job: plan
