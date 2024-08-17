@@ -18,7 +18,6 @@ pool:
   vmImage: "ubuntu-22.04"
 
 variables:
-  - group: terraform-sample-global
   - template: ../variables/variables.yaml
 
 stages:
