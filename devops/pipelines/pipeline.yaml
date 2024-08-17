@@ -53,5 +53,6 @@ stages:
     steps:
     - download: current
       artifact: infra-$(Build.BuildNumber)
+    - script: ls -ltra
     - script: docker run --rm -v "$PWD/infra-$(Build.BuildNumber):/app" -w /app  hashicorp/terraform plan
       displayName: Terraform plan
