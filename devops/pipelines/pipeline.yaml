@@ -6,6 +6,7 @@ trigger:
     include:
       - master
       - main
+      - devops-test
 
 pr:
   branches:
