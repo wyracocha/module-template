@@ -3,3 +3,6 @@ resource "null_resource" "example" {
     command = "echo This command will execute whenever the configuration changes"
   }
 }
+output "hello_world" {
+  value = "Hello, World!"
+}

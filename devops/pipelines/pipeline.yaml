@@ -29,6 +29,7 @@ stages:
       clean: "true"
     - script: docker run --tty --rm -v "$PWD/infra:/app" -w /app bridgecrew/checkov --directory /app
       displayName: Checkov
+    - script: docker run --rm -it -v "$PWD/infra:/app" aquasec/tfsec /app
 - stage: Validation
   jobs:
   - job: Lint
@@ -41,6 +42,8 @@ stages:
       displayName: Terraform validate
     - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform fmt -recursive
       displayName: Terraform fmt
+    - script: docker run --rm -v "$PWD/infra:/app" -w /app ghcr.io/terraform-linters/tflint
+      displayName: Terraform lint
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: $(System.DefaultWorkingDirectory)/infra
@@ -57,3 +60,21 @@ stages:
       displayName: Terraform init
     - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform plan
       displayName: Terraform plan
+
+- stage: Apply
+  jobs:
+  - job: Apply
+    steps:
+    - checkout: self
+      clean: "true"
+    - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform init
+      displayName: Terraform init
+    - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform apply
+      displayName: Terraform plan
+- stage: Test
+  jobs:
+  - job: terratest
+    steps:
+    - checkout: self
+      clean: "true" 
+    - script:  docker run -it --rm -v "$PWD/infra:/app" -w /app/test  golang:1.23.0-bookworm go test -v
