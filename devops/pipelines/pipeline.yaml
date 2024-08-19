@@ -30,6 +30,7 @@ stages:
     - script: docker run --tty --rm -v "$PWD/infra:/app" -w /app bridgecrew/checkov --directory /app
       displayName: Checkov
     - script: docker run --tty --rm -v "$PWD/infra:/app" aquasec/tfsec /app
+      displayName: TFSec
 - stage: Validation
   jobs:
   - job: Lint
@@ -45,6 +46,7 @@ stages:
     - script: docker run --rm -v "$PWD/infra:/app" -w /app ghcr.io/terraform-linters/tflint
       displayName: Terraform lint
     - task: PublishPipelineArtifact@1
+      displayName: Upload Artifact
       inputs:
         targetPath: $(System.DefaultWorkingDirectory)/infra
         artifact: infra-$(Build.BuildNumber)
@@ -77,4 +79,5 @@ stages:
     steps:
     - checkout: self
       clean: "true" 
-    - script:  docker run -it --rm -v "$PWD/infra:/app" -w /app/test  golang:1.23.0-bookworm go test -v
+    - script:  docker run --tty --rm -v "$PWD/infra:/app" -w /app/test  devildeveloper/terratest go test -v
+      displayName: Test
