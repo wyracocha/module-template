@@ -29,7 +29,7 @@ stages:
       clean: "true"
     - script: docker run --tty --rm -v "$PWD/infra:/app" -w /app bridgecrew/checkov --directory /app
       displayName: Checkov
-    - script: docker run --rm -it -v "$PWD/infra:/app" aquasec/tfsec /app
+    - script: docker run --tty --rm -v "$PWD/infra:/app" aquasec/tfsec /app
 - stage: Validation
   jobs:
   - job: Lint
