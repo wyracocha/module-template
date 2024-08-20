@@ -24,6 +24,8 @@ stages:
 - stage: Security
   jobs:
   - job: configuration
+    workspace:
+      clean: all
     steps:
     - checkout: self
       clean: "true"
@@ -34,6 +36,8 @@ stages:
 - stage: Validation
   jobs:
   - job: Lint
+    workspace:
+      clean: all
     steps: 
     - checkout: self
       clean: "true"
@@ -76,6 +80,8 @@ stages:
 - stage: Test
   jobs:
   - job: terratest
+    workspace:
+      clean: all
     steps:
     - checkout: self
       clean: "true" 
