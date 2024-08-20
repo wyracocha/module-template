@@ -85,5 +85,5 @@ stages:
     steps:
     - checkout: self
       clean: "true" 
-    - script:  docker run --rm -v "$PWD/infra:/app" -w /app/test  devildeveloper/terratest:v1.1.1 go test -v
+    - script:  docker run --rm -v "$PWD/infra:/app" -w /app/test  devildeveloper/terratest go test -v
       displayName: Test
