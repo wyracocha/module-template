@@ -85,5 +85,9 @@ stages:
     steps:
     - checkout: self
       clean: "true" 
-    - script:  docker run --rm -v "$PWD/infra:/app" -w /app/test  devildeveloper/terratest go test -v
-      displayName: Test
+    - script:  docker run --rm -v "$PWD/infra:/app" -w /app/test devildeveloper/terratest go mod init ibk/aks
+      displayName: Initializing repo
+    - script:  docker run --rm -v "$PWD/infra:/app" -w /app/test devildeveloper/terratest go mod tidy
+      displayName: Tidy repo
+    - script:  docker run --rm -v "$PWD/infra:/app" -w /app/test devildeveloper/terratest go test -v
+      displayName: Testing
