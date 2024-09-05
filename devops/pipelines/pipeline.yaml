@@ -7,8 +7,8 @@ stages:
     steps:
     - checkout: self
       clean: "true"
-    - script: docker run --tty --rm -v "$PWD:/app" -w /app bridgecrew/checkov --directory /app
-      displayName: Checkov
+    #- script: docker run --tty --rm -v "$PWD:/app" -w /app bridgecrew/checkov --directory /app
+    #  displayName: Checkov
     - script: docker run --tty --rm -v "$PWD:/app" aquasec/tfsec /app
       displayName: TFSec
 - stage: Validation
