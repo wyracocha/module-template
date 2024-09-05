@@ -1,18 +1,18 @@
 name: "$(Rev:rr)"
 
 # Trigger only on master/main branch and pull requests to master/main
-trigger:
-  branches:
-    include:
-      - master
-      - main
-      - devops-test
+# trigger:
+#   branches:
+#     include:
+#       - master
+#       - main
+#       - devops-test
 
-pr:
-  branches:
-    include:
-      - master
-      - main
+# pr:
+#   branches:
+#     include:
+#       - master
+#       - main
 
 pool:
   vmImage: "ubuntu-latest"
@@ -29,9 +29,9 @@ stages:
     steps:
     - checkout: self
       clean: "true"
-    - script: docker run --tty --rm -v "$PWD/infra:/app" -w /app bridgecrew/checkov --directory /app
+    - script: docker run --tty --rm -v "$PWD:/app" -w /app bridgecrew/checkov --directory /app
       displayName: Checkov
-    - script: docker run --tty --rm -v "$PWD/infra:/app" aquasec/tfsec /app
+    - script: docker run --tty --rm -v "$PWD:/app" aquasec/tfsec /app
       displayName: TFSec
 - stage: Validation
   jobs:
@@ -41,13 +41,13 @@ stages:
     steps: 
     - checkout: self
       clean: "true"
-    - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform init
+    - script: docker run --rm -v "$PWD:/app" -w /app  hashicorp/terraform init
       displayName: Terraform init
-    - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform validate
+    - script: docker run --rm -v "$PWD:/app" -w /app  hashicorp/terraform validate
       displayName: Terraform validate
-    - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform fmt -recursive
+    - script: docker run --rm -v "$PWD:/app" -w /app  hashicorp/terraform fmt -recursive
       displayName: Terraform fmt
-    - script: docker run --rm -v "$PWD/infra:/app" -w /app ghcr.io/terraform-linters/tflint
+    - script: docker run --rm -v "$PWD:/app" -w /app ghcr.io/terraform-linters/tflint
       displayName: Terraform lint
     - task: PublishPipelineArtifact@1
       displayName: Upload Artifact
@@ -63,9 +63,9 @@ stages:
     steps:
     - checkout: self
       clean: "true" 
-    - script:  docker run --rm -v "$PWD/infra:/app" -w /app/test devildeveloper/terratest go mod init ibk/aks
+    - script:  docker run --rm -v "$PWD:/app" -w /app/test devildeveloper/terratest go mod init ibk/aks
       displayName: Initializing repo
-    - script:  docker run --rm -v "$PWD/infra:/app" -w /app/test devildeveloper/terratest go mod tidy
+    - script:  docker run --rm -v "$PWD:/app" -w /app/test devildeveloper/terratest go mod tidy
       displayName: Tidy repo
-    - script:  docker run --rm -v "$PWD/infra:/app" -w /app/test devildeveloper/terratest go test -v
+    - script:  docker run --rm -v "$PWD:/app" -w /app/test devildeveloper/terratest go test -v
       displayName: Testing
