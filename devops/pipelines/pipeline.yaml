@@ -1,19 +1,5 @@
 name: "$(Rev:rr)"
 
-# Trigger only on master/main branch and pull requests to master/main
-# trigger:
-#   branches:
-#     include:
-#       - master
-#       - main
-#       - devops-test
-
-# pr:
-#   branches:
-#     include:
-#       - master
-#       - main
-
 pool:
   vmImage: "ubuntu-latest"
 
