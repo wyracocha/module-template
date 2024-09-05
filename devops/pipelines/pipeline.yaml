@@ -16,6 +16,8 @@ stages:
   - job: Lint
     workspace:
       clean: all
+    env:
+      JFROG_ACCESS_TOKEN: $(artifactory_token_project)
     steps: 
     - checkout: self
       clean: "true"
