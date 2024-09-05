@@ -55,28 +55,6 @@ stages:
         targetPath: $(System.DefaultWorkingDirectory)/infra
         artifact: infra-$(Build.BuildNumber)
         publishLocation: pipeline
-
-# - stage: Plan
-#   jobs:
-#   - job: plan
-#     steps:
-#     - checkout: self
-#       clean: "true"
-#     - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform init
-#       displayName: Terraform init
-#     - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform plan
-#       displayName: Terraform plan
-
-# - stage: Apply
-#   jobs:
-#   - job: Apply
-#     steps:
-#     - checkout: self
-#       clean: "true"
-#     - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform init
-#       displayName: Terraform init
-#     - script: docker run --rm -v "$PWD/infra:/app" -w /app  hashicorp/terraform apply
-#       displayName: Terraform plan
 - stage: Test
   jobs:
   - job: terratest
