@@ -16,18 +16,16 @@ stages:
   - job: Lint
     workspace:
       clean: all
-    env:
-      JFROG_ACCESS_TOKEN: $(artifactory_token_project)
     steps: 
     - checkout: self
       clean: "true"
-    - script: docker run --rm -v "$PWD:/app" -w /app  hashicorp/terraform init
+    - script: docker run --rm -v "$PWD:/app" -w /app  -e TF_TOKEN_artifactoryibk_jfrog_io=${{ parameters.artifactory_token_modules }} hashicorp/terraform init
       displayName: Terraform init
-    - script: docker run --rm -v "$PWD:/app" -w /app  hashicorp/terraform validate
+    - script: docker run --rm -v "$PWD:/app" -w /app  -e TF_TOKEN_artifactoryibk_jfrog_io=${{ parameters.artifactory_token_modules }} hashicorp/terraform validate
       displayName: Terraform validate
-    - script: docker run --rm -v "$PWD:/app" -w /app  hashicorp/terraform fmt -recursive
+    - script: docker run --rm -v "$PWD:/app" -w /app  -e TF_TOKEN_artifactoryibk_jfrog_io=${{ parameters.artifactory_token_modules }} hashicorp/terraform fmt -recursive
       displayName: Terraform fmt
-    - script: docker run --rm -v "$PWD:/app" -w /app ghcr.io/terraform-linters/tflint
+    - script: docker run --rm -v "$PWD:/app" -w /app  -e TF_TOKEN_artifactoryibk_jfrog_io=${{ parameters.artifactory_token_modules }} ghcr.io/terraform-linters/tflint
       displayName: Terraform lint
     - task: PublishPipelineArtifact@1
       displayName: Upload Artifact
