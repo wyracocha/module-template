@@ -36,6 +36,7 @@ stages:
         artifact: infra-$(Build.BuildNumber)
         publishLocation: pipeline
 - stage: Test
+  dependsOn: Validation
   condition: eq(variables.TEST_STAGE, true)
   jobs:
   - job: terratest
@@ -61,5 +62,5 @@ stages:
             -e ARM_SUBSCRIPTION_ID=$(az account show --query id --output tsv) \
             -e ARM_CLIENT_ID=$servicePrincipalId \
             -e ARM_TENANT_ID=$tenantId \
-            -e ARM_CLIENT_SECRET=$servicePrincipalKey devildeveloper/terratest go test -v
+            -e ARM_CLIENT_SECRET=$servicePrincipalKey devildeveloper/terratest go test -v -timeout 30m
 
