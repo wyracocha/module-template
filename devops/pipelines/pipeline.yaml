@@ -48,5 +48,16 @@ stages:
       displayName: Initializing repo
     - script:  docker run --rm -v "$PWD:/app" -w /app/test -e TF_TOKEN_artifactoryibk_jfrog_io=${{ parameters.artifactory_token_modules }} devildeveloper/terratest go mod tidy
       displayName: Tidy repo
-    - script:  docker run --rm -v "$PWD:/app" -w /app/test -e TF_TOKEN_artifactoryibk_jfrog_io=${{ parameters.artifactory_token_modules }} devildeveloper/terratest go test -v
+    - task: AzureCLI@2
+      azureSubscription: ${{ parameters.remote_backend_service_connection }}
+      scriptType: bash
+      scriptLocation: inlineScript
+      addSpnToEnvironment: true
+      inlineScript: |
+        docker run --rm -v "$PWD:/app" -w /app/test \
+          -e TF_TOKEN_artifactoryibk_jfrog_io=${{ parameters.artifactory_token_modules }} \
+          -e ARM_SUBSCRIPTION_ID=$(az account show --query id --output tsv) \
+          -e ARM_CLIENT_ID=$servicePrincipalId \
+          -e ARM_TENANT_ID=$tenantId \
+          -e ARM_CLIENT_SECRET=$servicePrincipalKey devildeveloper/terratest go test -v
       displayName: Testing
