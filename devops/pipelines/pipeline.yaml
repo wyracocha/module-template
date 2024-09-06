@@ -13,6 +13,7 @@ stages:
     - script: docker run --tty --rm -v "$PWD:/app" aquasec/tfsec /app
       displayName: TFSec
 - stage: Validation
+  condition: eq(variables.VALIDATION_STAGE, true)
   jobs:
   - job: Lint
     workspace:
