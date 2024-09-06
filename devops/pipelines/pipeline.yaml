@@ -51,8 +51,8 @@ stages:
     - task: AzureCLI@2
       displayName: Testing
       inputs:
-        azureSubscription: ${{ parameters.remote_backend_service_connection }}
-        scriptType: bash
+        azureSubscription: sceu2c011dsosnbx01
+        scriptType: shell
         scriptLocation: inlineScript
         addSpnToEnvironment: true
         inlineScript: |
