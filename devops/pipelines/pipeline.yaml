@@ -52,7 +52,7 @@ stages:
       displayName: Testing
       inputs:
         azureSubscription: sceu2c011dsosnbx01
-        scriptType: shell
+        scriptType: bash
         scriptLocation: inlineScript
         addSpnToEnvironment: true
         inlineScript: |
