@@ -29,12 +29,6 @@ stages:
       displayName: Terraform fmt
     - script: docker run --rm -v "$PWD:/app" -w /app  -e TF_TOKEN_artifactoryibk_jfrog_io=${{ parameters.artifactory_token_modules }} ghcr.io/terraform-linters/tflint
       displayName: Terraform lint
-    - task: PublishPipelineArtifact@1
-      displayName: Upload Artifact
-      inputs:
-        targetPath: $(System.DefaultWorkingDirectory)
-        artifact: infra-$(Build.BuildNumber)
-        publishLocation: pipeline
 - stage: Test
   dependsOn: Validation
   condition: eq(variables.TEST_STAGE, true)
@@ -63,4 +57,32 @@ stages:
             -e ARM_CLIENT_ID=$servicePrincipalId \
             -e ARM_TENANT_ID=$tenantId \
             -e ARM_CLIENT_SECRET=$servicePrincipalKey devildeveloper/terratest go test -v -timeout 30m
-
+- stage: DEPLOY
+  dependsOn: Test
+  condition: eq(variable.DEPLOY_STAGE, true)
+  jobs:
+  - job: Deploy
+    workspace:
+      clean: all
+    steps:
+    - checkout: self
+      path: terraformModule
+      clean: "true"
+    - script: |
+        zip -r build.zip . -x ".git/*" "devops/*" "test/*" "provider.tf"
+      displayName: Zip package
+    - task: Bash@3
+      displayName: "Artifactory: Upload Artifact"
+      inputs:
+        targetType: filePath
+        filePath: $(Pipeline.Workspace)/terraformModule/${{ parameters.template_alias }}/src/steps/azure/bash/upload_to_artifactory.sh
+      env:
+        ARTIFACTORY_USER: ${{ parameters.artifactory_user }}
+        ARTIFACTORY_TOKEN: ${{ parameters.artifactory_token }}
+        ARTIFACTORY_URL: ${{ parameters.artifactory_url }}
+        ARTIFACTORY_REPO: ${{ parameters.artifactory_repo }}
+        ARTIFACTORY_NAMESPACE: ${{ parameters.artifactory_namespace }}
+        ARTIFACTORY_MODULE_NAME: ${{ parameters.artifactory_module_name }}
+        ARTIFACTORY_MODULE_PROVIDER: ${{ parameters.artifactory_module_provider }}
+        FILE_PATH: $(Pipeline.Workspace)/${{ parameters.artifact_name }}
+        FILE_NAME: $(Build.SourceBranchName)
